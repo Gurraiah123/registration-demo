@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: system-ui, Arial, sans-serif; background: #f3f4f6; margin: 0; padding: 32px 16px; color: #1f2937; }
+        .card { max-width: 520px; margin: 0 auto; background: #fff; padding: 28px 32px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+        h1 { margin: 0 0 20px; font-size: 24px; }
+        label { display: block; margin: 14px 0 4px; font-weight: 600; font-size: 14px; }
+        input[type=text], input[type=email], input[type=password], input[type=date], select {
+            width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; }
+        input:focus, select:focus { outline: 2px solid #2563eb; border-color: transparent; }
+        .radio-row { display: flex; gap: 18px; font-size: 15px; }
+        .radio-row label { display: inline; font-weight: 400; margin: 0 0 0 4px; }
+        .error { color: #b91c1c; font-size: 13px; margin-top: 4px; }
+        .has-error { border-color: #b91c1c !important; }
+        button { margin-top: 22px; width: 100%; padding: 12px; background: #2563eb; color: #fff; border: 0; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #1d4ed8; }
+        .terms { margin-top: 16px; font-size: 14px; }
+        .terms label { display: inline; font-weight: 400; margin: 0; }
+        .footer { text-align: center; margin-top: 16px; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Create an account</h1>
+    <form th:action="@{/register}" th:object="${form}" method="post" novalidate>
+
+        <label for="fullName">Full name</label>
+        <input type="text" id="fullName" th:field="*{fullName}" th:errorclass="has-error">
+        <div class="error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" th:field="*{email}" th:errorclass="has-error">
+        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+        <label for="phone">Phone (10 digits)</label>
+        <input type="text" id="phone" th:field="*{phone}" th:errorclass="has-error" maxlength="10">
+        <div class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+
+        <label for="dateOfBirth">Date of birth</label>
+        <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" th:errorclass="has-error">
+        <div class="error" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+
+        <label>Gender</label>
+        <div class="radio-row">
+            <span><input type="radio" id="gMale" th:field="*{gender}" value="Male"><label for="gMale">Male</label></span>
+            <span><input type="radio" id="gFemale" th:field="*{gender}" value="Female"><label for="gFemale">Female</label></span>
+            <span><input type="radio" id="gOther" th:field="*{gender}" value="Other"><label for="gOther">Other</label></span>
+        </div>
+        <div class="error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
+
+        <label for="country">Country</label>
+        <select id="country" th:field="*{country}" th:errorclass="has-error">
+            <option value="">-- Select --</option>
+            <option th:each="c : ${countries}" th:value="${c}" th:text="${c}"></option>
+        </select>
+        <div class="error" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></div>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}" th:errorclass="has-error">
+        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+
+        <label for="confirmPassword">Confirm password</label>
+        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" th:errorclass="has-error">
+        <div class="error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+
+        <div class="terms">
+            <input type="checkbox" id="acceptTerms" th:field="*{acceptTerms}">
+            <label for="acceptTerms">I accept the terms and conditions</label>
+            <div class="error" th:if="${#fields.hasErrors('acceptTerms')}" th:errors="*{acceptTerms}"></div>
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+    <div class="footer"><a th:href="@{/users}">View registered users</a></div>
+</div>
+</body>
+</html>

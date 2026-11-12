@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registered users</title>
+    <style>
+        body { font-family: system-ui, Arial, sans-serif; background: #f3f4f6; margin: 0; padding: 32px 16px; color: #1f2937; }
+        .card { max-width: 900px; margin: 0 auto; background: #fff; padding: 28px 32px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+        th { background: #f9fafb; }
+        a { color: #2563eb; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Registered users</h1>
+    <p th:if="${#lists.isEmpty(users)}">No users registered yet.</p>
+    <table th:unless="${#lists.isEmpty(users)}">
+        <thead>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>DOB</th><th>Gender</th><th>Country</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${users}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.fullName}"></td>
+            <td th:text="${u.email}"></td>
+            <td th:text="${u.phone}"></td>
+            <td th:text="${u.dateOfBirth}"></td>
+            <td th:text="${u.gender}"></td>
+            <td th:text="${u.country}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p><a th:href="@{/register}">&larr; Back to registration</a></p>
+</div>
+</body>
+</html>

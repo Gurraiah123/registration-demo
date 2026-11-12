@@ -1,0 +1,29 @@
+---
+- name: Deploy Application into eks cluster
+  hosts: appserver
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: copy kubernetes deployment file to appserver
+      copy:
+        src: "{{ playbook_dir }}/k8s_deployments.yaml"
+        dest: /home/ec2-user/k8s_deployments.yaml
+        mode: "0644"
+
+    - name: check kubeconfig file exist
+      stat:
+        path: /home/ec2-user/.kube/config
+      register: kubeconfig_stat
+
+    - name: copy kubeconfig file to target if missing
+      copy:
+        src: "{{ playbook_dir }}/kubeconfig"
+        dest: /home/ec2-user/.kube/config
+        owner: ec2-user
+      when: not kubeconfig_stat.stat.exists
+
+    - name: Apply kubernetes deployment
+      command: kubectl apply -f /home/ec2-user/k8s_deployments.yaml
+      environment:
+        KUBECONFIG: /home/ec2-user/.kube/config
