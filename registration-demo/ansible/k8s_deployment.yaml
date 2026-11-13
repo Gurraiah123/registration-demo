@@ -1,35 +1,36 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mc-apps
+  name: registration-demo
   labels:
-    app: mc-apps
+    app: registration-demo
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: mc-app
+      app: registration-demo
   template:
     metadata:
       labels:
-        app: mc-app
+        app: registration-demo
     spec:
       containers:
-        - name: mc-app
-          image: guru0114/k8s:1
+        - name: registration-container
+          image: guru0114/registration-demo:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
+              protocol: TCP
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mc-app
+  name: registration-service
 spec:
   type: LoadBalancer
   selector:
-    app: mc-app
+    app: registration-demo
   ports:
     - name: http
       port: 80
