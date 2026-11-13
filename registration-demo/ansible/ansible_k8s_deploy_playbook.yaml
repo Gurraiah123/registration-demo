@@ -57,15 +57,3 @@
       become_user: ec2-user
       environment:
         KUBECONFIG: /home/ec2-user/.kube/config
-
-    - name: Check deployment rollout
-      command: kubectl rollout status deployment/registration-demo --timeout=300s
-      become_user: ec2-user
-      environment:
-        KUBECONFIG: /home/ec2-user/.kube/config
-
-    - name: Get Kubernetes services
-      command: kubectl get services
-      become_user: ec2-user
-      environment:
-        KUBECONFIG: /home/ec2-user/.kube/config
