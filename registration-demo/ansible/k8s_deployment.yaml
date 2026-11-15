@@ -27,12 +27,17 @@ apiVersion: v1
 kind: Service
 metadata:
   name: registration-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-1:125647512988:certificate/368e1946-dde7-4677-8521-c9a0bd6469d3"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
 spec:
   type: LoadBalancer
   selector:
     app: registration-demo
   ports:
-    - name: http
-      port: 80
+    - name: https
+      port: 443
       targetPort: 9090
       protocol: TCP
