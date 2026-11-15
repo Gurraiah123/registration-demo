@@ -22,7 +22,7 @@ spec:
             - containerPort: 9090
               protocol: TCP
 
----
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -30,8 +30,10 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "external"
     service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-1:125647512988:certificate/368e1946-dde7-4677-8521-c9a0bd6469d3"
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
 spec:
   type: LoadBalancer
   selector:
