@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: registration-container
-          image: guru0114/registration-demo:13
+          image: guru0114/registration-demo:14
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
