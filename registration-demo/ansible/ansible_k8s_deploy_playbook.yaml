@@ -1,3 +1,4 @@
+
 ---
 - name: Deploy Application into EKS cluster
   hosts: appserver
@@ -7,7 +8,7 @@
   tasks:
 
     - name: Create Kubernetes directory
-      file:
+      ansible.builtin.file:
         path: /home/ec2-user/.kube
         state: directory
         owner: ec2-user
@@ -15,7 +16,7 @@
         mode: "0700"
 
     - name: Create Kubernetes manifests directory
-      file:
+      ansible.builtin.file:
         path: /home/ec2-user/k8s
         state: directory
         owner: ec2-user
@@ -23,7 +24,7 @@
         mode: "0755"
 
     - name: Copy Kubernetes deployment manifest
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/k8s_deployment.yaml"
         dest: /home/ec2-user/k8s/k8s_deployment.yaml
         owner: ec2-user
@@ -31,17 +32,33 @@
         mode: "0644"
 
     - name: Generate EKS kubeconfig
-      command: >
-        aws eks update-kubeconfig
-        --region us-east-1
-        --name registration
-        --kubeconfig /home/ec2-user/.kube/config
+      ansible.builtin.command:
+        cmd: >
+          aws eks update-kubeconfig
+          --region us-east-1
+          --name registration
+          --kubeconfig /home/ec2-user/.kube/config
       become_user: ec2-user
       environment:
         HOME: /home/ec2-user
 
+    - name: Verify EKS connection
+      ansible.builtin.command:
+        cmd: kubectl get nodes
+      become_user: ec2-user
+      environment:
+        HOME: /home/ec2-user
+        KUBECONFIG: /home/ec2-user/.kube/config
+      register: eks_nodes
+      changed_when: false
+
+    - name: Display EKS nodes
+      ansible.builtin.debug:
+        var: eks_nodes.stdout_lines
+
     - name: Apply Kubernetes deployment
-      command: kubectl apply -f /home/ec2-user/k8s/
+      ansible.builtin.command:
+        cmd: kubectl apply -f /home/ec2-user/k8s/
       become_user: ec2-user
       environment:
         HOME: /home/ec2-user
