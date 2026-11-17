@@ -6,40 +6,85 @@ metadata:
     app: registration-demo
 spec:
   replicas: 2
+
   selector:
     matchLabels:
       app: registration-demo
+
   template:
     metadata:
       labels:
         app: registration-demo
+
     spec:
       containers:
         - name: registration-container
           image: guru0114/registration-demo:21
           imagePullPolicy: Always
+
           ports:
-            - containerPort: 9090
+            - name: http
+              containerPort: 8080
               protocol: TCP
 
+          env:
+            - name: SERVER_PORT
+              value: "8080"
 
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 40
+            periodSeconds: 20
+
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+              
+              
+              
+              
 apiVersion: v1
 kind: Service
+
 metadata:
   name: registration-service
+
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "external"
+
     service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-1:125647512988:certificate/368e1946-dde7-4677-8521-c9a0bd6469d3"
+
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "TCP"
+
 spec:
   type: LoadBalancer
+
   selector:
     app: registration-demo
+
   ports:
     - name: https
       port: 443
-      targetPort: 9090
+      targetPort: http
       protocol: TCP
